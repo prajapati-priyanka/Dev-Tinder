@@ -3,47 +3,52 @@ const express = require("express");
 
 const app = express();
 
-// way to send request
 
-// app.use("/",(req,res)=>{
-//     res.send("Hello from the HOME PAGE in the server....");  // This is the request handler callback
+// Use of ? mark in routes. b will become optional. MEans we can routes /abc or /ac both will work
+// app.get("/ab?c", (req,res)=>{
+//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
 // })
 
-// app.use("/hello",(req,res)=>{
-//     res.send("Hello from the server....");  // This is the request handler callback
+
+// Use of + mark in routes. MEans we can add as many b's between b and c. Eg /abc or /abbbbbbbbbbbbbbbbc both will work
+// app.get("/ab+c", (req,res)=>{
+//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
 // })
 
-// app.use("/hello/hello",(req,res)=>{
-//     res.send("Hello Hello from the server...");  // This is the request handler callback
+
+// Use of () mark in routes. bc will become optional. MEans we can routes /abcd or /ad both will work
+// app.get("/a(bc)?d", (req,res)=>{
+//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
 // })
 
-app.use("/user", (req,res)=>{
-    res.send("Orders matters dude HAHAHAHAHAH !!");
-})
+// Use of * mark in routes. anything can be added between ab and c. MEans we can routes /abc or /absoaiuoiudc or /ab8hdid90jec anything will work
+// app.get("/ab*c", (req,res)=>{
+//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
+// })
 
-// This will only handle GET call to user
-app.get("/user", (req,res)=>{
+// Use of regex /a/ and /.*fly$/
+
+//**** it will gove resilt if a is there in the route
+// app.get(/a/, (req,res)=>{
+//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
+// });
+
+//  it will gove reslut for every name which ends with fly. Eg. dragonfly, butterfly, fly
+// app.get(/.*fly$/, (req,res)=>{
+//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
+// });
+
+
+// USe of query and params method. 
+
+app.get("/user/:id/:name", (req,res)=>{
+    // console.log(req.query);
+    console.log(req.params)
+    
     res.send({firstName: "Priyanka", lastName: "Prajapati"});
-})
+});
 
 
-// This will only handle POST call to user
-
-app.post("/user", (req,res)=>{
-    // this will save data to the database
-    res.send("Data successfully saved to database");
-})
-
-// This will only handle DELETE call to user
-
-app.delete("/user", (req,res)=>{
-    res.send("Data is successfully deleted from the database");
-})
-
-// This will match all the http methods API calls to /test
-app.use("/test",(req,res)=>{
-    res.send("Hello from the test route in the server....");  // This is the request handler callback
-})
 
 // Now to listen to request we need to define on which port request is being lsitened
 app.listen(3000, ()=>{
