@@ -3,25 +3,15 @@ const express = require("express");
 
 const app = express();
 
-// use to check Auth for all the http methods GET, POST, DELETE etc...
+const {authAdmin} = require('./middlewares/authMiddleware');
 
-app.use("/admin", (req,res,next)=>{
-    console.log("checking Auth");
-    const token = "xyz";
-    const isAdminAuthorized = token === "xyz";
-
-    if(!isAdminAuthorized){
-        res.send(401).send("Admin is not authorized");
-    }else{
-        next();
-    }
-})
+app.use("/admin", authAdmin);
 
 app.use("/user", (req,res)=>{
     res.send("user")
 })
 
-app.get("/admin/getAllData", (req,res)=>{
+app.get("/admin/getAllData",  (req,res)=>{
     console.log("Got All Data");
     res.status(200).send("Yay!!! Got all the data");
 });
