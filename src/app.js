@@ -5,18 +5,42 @@ const app = express();
 
 // way to send request
 
-app.use("/",(req,res)=>{
-    res.send("Hello from the HOME PAGE in the server....");  // This is the request handler callback
+// app.use("/",(req,res)=>{
+//     res.send("Hello from the HOME PAGE in the server....");  // This is the request handler callback
+// })
+
+// app.use("/hello",(req,res)=>{
+//     res.send("Hello from the server....");  // This is the request handler callback
+// })
+
+// app.use("/hello/hello",(req,res)=>{
+//     res.send("Hello Hello from the server...");  // This is the request handler callback
+// })
+
+app.use("/user", (req,res)=>{
+    res.send("Orders matters dude HAHAHAHAHAH !!");
 })
 
-app.use("/hello",(req,res)=>{
-    res.send("Hello from the server....");  // This is the request handler callback
+// This will only handle GET call to user
+app.get("/user", (req,res)=>{
+    res.send({firstName: "Priyanka", lastName: "Prajapati"});
 })
 
-app.use("/hello/hello",(req,res)=>{
-    res.send("Hello Hello from the server...");  // This is the request handler callback
+
+// This will only handle POST call to user
+
+app.post("/user", (req,res)=>{
+    // this will save data to the database
+    res.send("Data successfully saved to database");
 })
 
+// This will only handle DELETE call to user
+
+app.delete("/user", (req,res)=>{
+    res.send("Data is successfully deleted from the database");
+})
+
+// This will match all the http methods API calls to /test
 app.use("/test",(req,res)=>{
     res.send("Hello from the test route in the server....");  // This is the request handler callback
 })
