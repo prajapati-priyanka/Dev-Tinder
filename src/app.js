@@ -3,50 +3,24 @@ const express = require("express");
 
 const app = express();
 
+// different syntaxes for combining different routeHandlers
 
-// Use of ? mark in routes. b will become optional. MEans we can routes /abc or /ac both will work
-// app.get("/ab?c", (req,res)=>{
-//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
-// })
+// app.use("/routes", rH1,rh2,rH3,rH4,rH4);
+// app.use("/routes", [rH1,rh2,rH3,rH4,rH4]);
+// app.use("/routes", [rH1,rh2],rH3,rH4,rH4);
+// app.use("/routes", rH1,rh2,[rH3],rH4,rH4);
 
+app.use("/user", (req,res,next)=>{
+    console.log("Response 1");
+    // res.send("Response 1");
+    next(); // use to call next callback. if not then second callback is not called
+},(req,res,next)=>{
+    console.log("Response 2");
+    // res.send("Response 2");
+    next() // it shows that express is expecting response handler. if no response handler then it will say cannot get user routes
 
-// Use of + mark in routes. MEans we can add as many b's between b and c. Eg /abc or /abbbbbbbbbbbbbbbbc both will work
-// app.get("/ab+c", (req,res)=>{
-//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
-// })
+})
 
-
-// Use of () mark in routes. bc will become optional. MEans we can routes /abcd or /ad both will work
-// app.get("/a(bc)?d", (req,res)=>{
-//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
-// })
-
-// Use of * mark in routes. anything can be added between ab and c. MEans we can routes /abc or /absoaiuoiudc or /ab8hdid90jec anything will work
-// app.get("/ab*c", (req,res)=>{
-//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
-// })
-
-// Use of regex /a/ and /.*fly$/
-
-//**** it will gove resilt if a is there in the route
-// app.get(/a/, (req,res)=>{
-//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
-// });
-
-//  it will gove reslut for every name which ends with fly. Eg. dragonfly, butterfly, fly
-// app.get(/.*fly$/, (req,res)=>{
-//     res.send({firstName: "Priyanka", lastName: "Prajapati"});
-// });
-
-
-// USe of query and params method. 
-
-app.get("/user/:id/:name", (req,res)=>{
-    // console.log(req.query);
-    console.log(req.params)
-    
-    res.send({firstName: "Priyanka", lastName: "Prajapati"});
-});
 
 
 
