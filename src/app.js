@@ -13,6 +13,10 @@ app.use("/hello",(req,res)=>{
     res.send("Hello from the server....");  // This is the request handler callback
 })
 
+app.use("/hello/hello",(req,res)=>{
+    res.send("Hello Hello from the server...");  // This is the request handler callback
+})
+
 app.use("/test",(req,res)=>{
     res.send("Hello from the test route in the server....");  // This is the request handler callback
 })
