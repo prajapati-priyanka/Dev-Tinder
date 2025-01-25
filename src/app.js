@@ -3,26 +3,32 @@ const express = require("express");
 
 const app = express();
 
-// different syntaxes for combining different routeHandlers
+// use to check Auth for all the http methods GET, POST, DELETE etc...
 
-// app.use("/routes", rH1,rh2,rH3,rH4,rH4);
-// app.use("/routes", [rH1,rh2,rH3,rH4,rH4]);
-// app.use("/routes", [rH1,rh2],rH3,rH4,rH4);
-// app.use("/routes", rH1,rh2,[rH3],rH4,rH4);
+app.use("/admin", (req,res,next)=>{
+    console.log("checking Auth");
+    const token = "xyz";
+    const isAdminAuthorized = token === "xyz";
 
-app.use("/user", (req,res,next)=>{
-    console.log("Response 1");
-    // res.send("Response 1");
-    next(); // use to call next callback. if not then second callback is not called
-},(req,res,next)=>{
-    console.log("Response 2");
-    // res.send("Response 2");
-    next() // it shows that express is expecting response handler. if no response handler then it will say cannot get user routes
-
+    if(!isAdminAuthorized){
+        res.send(401).send("Admin is not authorized");
+    }else{
+        next();
+    }
 })
 
+app.use("/user", (req,res)=>{
+    res.send("user")
+})
 
-
+app.get("/admin/getAllData", (req,res)=>{
+    console.log("Got All Data");
+    res.status(200).send("Yay!!! Got all the data");
+});
+app.delete("/admin/deleteData", (req,res)=>{
+    console.log("Data Deleted");
+    res.status(200).send("Data is deleted");
+});
 
 // Now to listen to request we need to define on which port request is being lsitened
 app.listen(3000, ()=>{
