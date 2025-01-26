@@ -3,7 +3,7 @@ const express = require("express");
 
 const app = express();
 
-const {authAdmin} = require('./middlewares/authMiddleware');
+const {authAdmin} = require('./middlewares/auth');
 
 app.use("/admin", authAdmin);
 
