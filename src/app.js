@@ -5,20 +5,25 @@ const app = express();
 
 const {authAdmin} = require('./middlewares/auth');
 
-app.use("/admin", authAdmin);
+// app.use("/", (err,req,res,next)=>{
+//     if(err){
+//         res.status(500).send("Error Occurred: Something went wrong");
 
-app.use("/user", (req,res)=>{
-    res.send("user")
+//     }
+// })
+
+app.get("/getUserData", (req,res)=>{
+    throw new Error("Something went wrong");
+    res.send("User Data Sent");
 })
 
-app.get("/admin/getAllData",  (req,res)=>{
-    console.log("Got All Data");
-    res.status(200).send("Yay!!! Got all the data");
-});
-app.delete("/admin/deleteData", (req,res)=>{
-    console.log("Data Deleted");
-    res.status(200).send("Data is deleted");
-});
+app.use("/", (err,req,res,next)=>{
+    if(err){
+        res.status(500).send("Error Occurred: Something went wrong");
+
+    }
+})
+
 
 // Now to listen to request we need to define on which port request is being lsitened
 app.listen(3000, ()=>{
