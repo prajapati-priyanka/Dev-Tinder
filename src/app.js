@@ -4,6 +4,26 @@ const express = require("express");
 const app = express();
 
 const connectDB = require("./config/database");
+const User = require('./models/user');
+
+app.post("/signup", async(req,res)=>{
+    const newUser = new User({
+        firstName : "Ankit",
+        lastName: "Agarwalla",
+        gender: "male",
+        email: "ankit@agarwalla.com",
+        password: "ankit@123"
+    })
+
+    try {
+        await newUser.save();
+        res.send("User successfully added");
+    } catch (error) {
+       res.status(500).send("Error occurred: " + error.message); 
+    }
+
+  
+})
 
 connectDB()
   .then(() => {
