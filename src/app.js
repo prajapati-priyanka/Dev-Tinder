@@ -7,6 +7,8 @@ const connectDB = require("./config/database");
 const User = require('./models/user');
 
 app.post("/signup", async(req,res)=>{
+
+    // Creating a new instance of the User Model
     const newUser = new User({
         firstName : "Ankit",
         lastName: "Agarwalla",
