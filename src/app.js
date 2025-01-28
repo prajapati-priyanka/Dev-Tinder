@@ -6,16 +6,16 @@ const app = express();
 const connectDB = require("./config/database");
 const User = require('./models/user');
 
+
+// middleware to parse request body for all the routes.
+app.use(express.json());
+
 app.post("/signup", async(req,res)=>{
 
+    console.log(req.body);
+
     // Creating a new instance of the User Model
-    const newUser = new User({
-        firstName : "Ankit",
-        lastName: "Agarwalla",
-        gender: "male",
-        email: "ankit@agarwalla.com",
-        password: "ankit@123"
-    })
+    const newUser = new User(req.body);
 
     try {
         await newUser.save();
