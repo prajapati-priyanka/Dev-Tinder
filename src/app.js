@@ -23,6 +23,17 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+// GET API TO GET ALL THE USERS or FEED API
+
+app.get("/feed", async(req,res)=>{
+// get all the documents(means all users) of user collection
+//    const allUsers = await User.find({});
+
+// get all the documents of name "Lata"
+const userBySameName = await User.find({firstName: "Lata"});
+   res.send(userBySameName);
+})
+
 connectDB()
   .then(() => {
     console.log("Database connection successfully estalished");
