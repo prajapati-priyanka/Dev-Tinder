@@ -34,6 +34,21 @@ const userBySameName = await User.find({firstName: "Lata"});
    res.send(userBySameName);
 })
 
+// PATCH API
+
+app.patch("/user", async (req,res)=>{
+  try {
+  const updatedUserInfo = await User.findByIdAndUpdate({_id: req.body.userId}, req.body,{
+    returnDocument: "after",
+    runValidators: true
+  });
+  res.send("User Updated Successfully");
+  } catch (error) {
+    res.send("Update failed: " + error.message);
+  }
+  
+})
+
 connectDB()
   .then(() => {
     console.log("Database connection successfully estalished");
