@@ -2,8 +2,11 @@
 const express = require("express");
 const bcrypt = require('bcrypt');
 const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const cookieParser = require('cookie-parser');
 
 const app = express();
+
 
 const connectDB = require("./config/database");
 const User = require("./models/user");
@@ -11,6 +14,7 @@ const {validateSignUpData} = require("./utils/validateSignUpData")
 
 // middleware to parse request body for all the routes.
 app.use(express.json());
+app.use(cookieParser());
 
 // SIGN UP POST API TO SEND DATA
 
@@ -53,6 +57,12 @@ const {email, password} = req.body;
  const isValidPassword = await bcrypt.compare(password, user.password);
 
   if(isValidPassword){
+    // Generate JWT Token
+    
+    const jwtToken = jwt.sign({"_id": user._id}, "WORLD@123");
+
+    // Wrap the token in the cookie and send as a response to the user
+    res.cookie("token", jwtToken);
     res.status(200).send("Login Successfully!")
   }else{
     throw new Error("Invalid Credentials");
@@ -65,6 +75,39 @@ const {email, password} = req.body;
 }
 })
 
+
+// Profile API
+
+app.get("/profile", async(req,res)=>{
+ 
+  try {
+
+    const {token} = req.cookies;
+
+    const decodedData = await jwt.verify(token, 'WORLD@123');
+
+  
+
+    // Validate my token
+    if(!decodedData){
+      throw new Error("Invalid Token. Please login again")
+     
+    }
+
+    const user  = await User.find({"_id": decodedData._id})
+    if(!user){
+      throw new Error("No User Found");
+    }
+
+    // send user profile
+    res.status(200).send(user);
+  
+    
+  } catch (error) {
+    res.status(400).send("ERROR: " + error.message);
+  }
+
+})
 
 
 
