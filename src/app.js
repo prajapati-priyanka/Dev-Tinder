@@ -64,7 +64,7 @@ app.post("/login", async (req, res) => {
       const jwtToken = jwt.sign({ _id: user._id }, "WORLD@123", {expiresIn: "1d"});
 
       // Wrap the token in the cookie and send as a response to the user
-      res.cookie("token", jwtToken);
+      res.cookie("token", jwtToken,{ expires: new Date(Date.now() + 900000)});
       res.status(200).send("Login Successfully!");
     } else {
       throw new Error("Invalid Credentials");
