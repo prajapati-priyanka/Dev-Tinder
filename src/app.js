@@ -1,6 +1,7 @@
 // First we require express to create a server
 const express = require("express");
 const bcrypt = require('bcrypt');
+const validator = require("validator");
 
 const app = express();
 
@@ -11,7 +12,7 @@ const {validateSignUpData} = require("./utils/validateSignUpData")
 // middleware to parse request body for all the routes.
 app.use(express.json());
 
-// POST API TO SEND DATA
+// SIGN UP POST API TO SEND DATA
 
 app.post("/signup", async (req, res) => {
 
@@ -32,6 +33,37 @@ app.post("/signup", async (req, res) => {
     res.status(500).send("ERROR : " + error.message);
   }
 });
+
+
+// LOGIN POST API 
+
+app.post("/login", async(req,res)=>{
+try{
+const {email, password} = req.body;
+ if(!validator.isEmail(email)){
+  throw new Error("Invalid Credentials");
+ }
+
+ const user = await User.findOne({email});
+
+ if(!user){
+  throw new Error ("No User Found");
+ }
+
+ const isValidPassword = await bcrypt.compare(password, user.password);
+
+  if(isValidPassword){
+    res.status(200).send("Login Successfully!")
+  }else{
+    throw new Error("Invalid Credentials");
+  }
+
+
+
+}catch(err){
+  res.status(400).send("ERROR: " + err.message);
+}
+})
 
 
 
