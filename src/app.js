@@ -36,9 +36,24 @@ const userBySameName = await User.find({firstName: "Lata"});
 
 // PATCH API
 
-app.patch("/user", async (req,res)=>{
+app.patch("/user/:userId", async (req,res)=>{
+
+  const userId = req.params?.userId;
+  const data = req.body;
   try {
-  const updatedUserInfo = await User.findByIdAndUpdate({_id: req.body.userId}, req.body,{
+
+  const ALLOWED_UPDATES = ["age", "gender", "skills", "photoUrl"];
+
+  const updatesAllowed = Object.keys(data).every(item => ALLOWED_UPDATES.includes(item));
+
+  if(!updatesAllowed){
+    throw new Error("Updates Not Allowed")
+  }
+  if(data.skills.length > 5){
+    throw new Error("You cannot add skills more than 5");
+  }
+
+  const updatedUserInfo = await User.findByIdAndUpdate({_id: userId}, data,{
     returnDocument: "after",
     runValidators: true
   });
