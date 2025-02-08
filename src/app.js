@@ -87,47 +87,13 @@ app.get("/profile", userAuth, async (req, res) => {
   }
 });
 
-// GET API TO GET ALL THE USERS or FEED API
-
-app.get("/feed", async (req, res) => {
-  // get all the documents(means all users) of user collection
-  //    const allUsers = await User.find({});
-
-  // get all the documents of name "Lata"
-  const userBySameName = await User.find({ firstName: "Lata" });
-  res.send(userBySameName);
-});
-
-// PATCH API
-
-app.patch("/user/:userId", async (req, res) => {
-  const userId = req.params?.userId;
-  const data = req.body;
+// send connection request API
+app.post("/sendconnectionrequest", userAuth, (req, res) => {
   try {
-    const ALLOWED_UPDATES = ["age", "gender", "skills", "photoUrl"];
-
-    const updatesAllowed = Object.keys(data).every((item) =>
-      ALLOWED_UPDATES.includes(item)
-    );
-
-    if (!updatesAllowed) {
-      throw new Error("Updates Not Allowed");
-    }
-    if (data.skills.length > 5) {
-      throw new Error("You cannot add skills more than 5");
-    }
-
-    const updatedUserInfo = await User.findByIdAndUpdate(
-      { _id: userId },
-      data,
-      {
-        returnDocument: "after",
-        runValidators: true,
-      }
-    );
-    res.send("User Updated Successfully");
+    const user = req.user;
+    res.send(`${user.firstName} has sent the connection request`);
   } catch (error) {
-    res.send("Update failed: " + error.message);
+    res.status(400).send("ERROR: " + error.message);
   }
 });
 
