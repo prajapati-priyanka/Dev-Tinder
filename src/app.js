@@ -61,7 +61,7 @@ app.post("/login", async (req, res) => {
     if (isValidPassword) {
       // Generate JWT Token
 
-      const jwtToken = user.getJwtToken();
+      const jwtToken = await user.getJwtToken();
 
       // Wrap the token in the cookie and send as a response to the user
       res.cookie("token", jwtToken,{ expires: new Date(Date.now() + 900000)});

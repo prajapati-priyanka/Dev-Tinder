@@ -52,11 +52,11 @@ const userSchema = new Schema({
 
 }, {timestamps: true});
 
-userSchema.methods.getJwtToken = async function(){
+userSchema.methods.getJwtToken = function(){
 
   const user = this;
 
-  const token = await jwt.sign({ _id: user._id }, "WORLD@123", { expiresIn: "1d" })
+  const token =  jwt.sign({ _id: user._id }, "WORLD@123", { expiresIn: "1d" })
   return token;
   
 };
