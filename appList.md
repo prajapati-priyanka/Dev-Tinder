@@ -1,26 +1,34 @@
 # Dev Tinder APIs
 
+## Auth Router
  POST /signup
  POST /login
  POST /logout
 
 
- GET /profile/view
- PATCH /profile/edit
- PATCH  /profile/password
+## Profile Router
+ GET  /profile/view
+ PATCH  /profile/edit
+ PATCH   /profile/password
 
- GET /feed   >> it will show all the users which are in the platform
-
-
+## ConnectionRequest Router
  POST /request/send/interested/:userId
+
  POST /request/send/ignored/:userId
- 
+
  POST /request/review/accepted/:requestId
+
  POST /request/review/rejected/:requestId
 
 
- GET /connections
- GET /requests/recieved
+## User Router
+ GET user/connections
 
- Different statuses we have are: Interested, Ignored, Accepted, Rejected
+ GET user/requests/recieved
+
+ GET  user/feed   >> it will show all the users which are in the platform
+
+
+### Different Statuses
+ Interested, Ignored, Accepted, Rejected
 
