@@ -1,10 +1,12 @@
 // First we require express to create a server
 const express = require("express");
+const bcrypt = require('bcrypt');
 
 const app = express();
 
 const connectDB = require("./config/database");
 const User = require("./models/user");
+const {validateSignUpData} = require("./utils/validateSignUpData")
 
 // middleware to parse request body for all the routes.
 app.use(express.json());
@@ -12,16 +14,27 @@ app.use(express.json());
 // POST API TO SEND DATA
 
 app.post("/signup", async (req, res) => {
-  // Creating a new instance of the User Model
-  const newUser = new User(req.body);
+
 
   try {
+      // validate signup data
+  validateSignUpData(req);
+
+  const {firstName, lastName, email, password} = req.body;
+
+  const passwordHash = await bcrypt.hash(password, 10);
+   // Creating a new instance of the User Model
+  const newUser = new User({firstName, lastName, email, password: passwordHash});
+
     await newUser.save();
     res.send("User successfully added");
   } catch (error) {
-    res.status(500).send("Error occurred: " + error.message);
+    res.status(500).send("ERROR : " + error.message);
   }
 });
+
+
+
 
 // GET API TO GET ALL THE USERS or FEED API
 
