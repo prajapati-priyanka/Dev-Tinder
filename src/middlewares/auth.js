@@ -1,16 +1,32 @@
-// use to check Auth for all the http methods GET, POST, DELETE etc...
-const authAdmin = (req,res,next)=>{
-    console.log("checking Auth");
-    const token = "xyz";
-    const isAdminAuthorized = token === "xyz";
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 
-    if(!isAdminAuthorized){
-        res.send(401).send("Admin is not authorized");
-    }else{
-        next();
+const userAuth = async (req, res, next) => {
+  try {
+    // Read the cookies from the req,
+    const { token } = req.cookies;
+
+    // validate the token
+    if (!token) {
+      throw new Error("Invalid Token !!!");
     }
+
+    const decodedData = await jwt.verify(token, "WORLD@123");
+    const { _id } = decodedData;
+    // Find the user
+    const user = await User.findById(_id);
+    if (!user) {
+      throw new Error("No User Found");
+    }
+
+    req.user = user;
+    next()
+  } catch (error) {
+    res.status(400).send("ERROR: " + error.message);
+  }
 };
 
 module.exports = {
-    authAdmin : authAdmin
-}
+  // userAuth : userAuth
+  userAuth,
+};
