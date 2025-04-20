@@ -1,7 +1,10 @@
 const express = require("express");
 const profileRouter = express.Router();
 const { userAuth } = require("../middlewares/auth");
-const { validateEditProfileData } = require("../utils/validateData");
+const {
+  validateEditProfileData,
+  validateEditPasswordData,
+} = require("../utils/validateData");
 
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
@@ -31,10 +34,32 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 
     await loggedInUser.save();
     //  res.send("Profile Updated successfully");
-    res.json({ 
-        message: "Profile Updated successfully", 
-        data: loggedInUser 
+    res.json({
+      message: "Profile Updated successfully",
+      data: loggedInUser,
     });
+  } catch (error) {
+    res.send("ERROR: " + error.message);
+  }
+});
+
+profileRouter.patch("/profile/password", userAuth, async (req, res) => {
+  try {
+    if (!validateEditPasswordData(req)) {
+      throw new Error("Invalid Password");
+    }
+    const loggedInUser = req.user;
+    // console.log(loggedInUser);
+    // Generate JWT TOKEN
+
+    const jwtToken = await loggedInUser.getJwtToken();
+
+    // wrap this token in cookie
+
+    res.cookie("token", jwtToken, { expires: new Date(Date.now() + 900000) });
+    loggedInUser.password = req.body.password;
+    await loggedInUser.save();
+    res.send("Passwords Changed successfully");
   } catch (error) {
     res.send("ERROR: " + error.message);
   }

@@ -1,4 +1,5 @@
 const validator = require('validator');
+const User = require('../models/user');
 
 const validateSignUpData = (req)=>{
 const {firstName, lastName, email,password} = req.body;
@@ -26,7 +27,27 @@ const validateEditProfileData = req =>{
    return isEditAllowed;
 }
 
+const validateEditPasswordData = async(req) =>{
+   const {email, password} = req.body;
+
+   if(!validator.isEmail(email)){
+      throw new Error("Invalid Email !!")
+   }
+   
+   const user = await User.findOne({email});
+
+   if(!user){
+      throw new Error("No User Found");
+   }
+
+   const isPasswordValid = user.validatePassword(password);
+
+   return isPasswordValid;
+   
+}
+
 module.exports = {
    validateSignUpData,
-   validateEditProfileData
+   validateEditProfileData,
+   validateEditPasswordData
 }
