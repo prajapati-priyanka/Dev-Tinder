@@ -40,9 +40,9 @@ requestRouter.post(
         throw new Error("Invalid Status");
       }
       // checks if fromUserId equals to toUserId
-      if (fromUserId.equals(toUserId)) {
-        throw new Error("You cannot sent connection request to Yourself");
-      }
+      // if (fromUserId.equals(toUserId)) {
+      //   throw new Error("You cannot sent connection request to Yourself");
+      // }
 
       // check for existing connection
 
