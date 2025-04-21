@@ -21,11 +21,9 @@
  POST /request/review/status/:requestId
 
 
-## User Router
- GET user/connections
-
+## userRouter
  GET user/requests/recieved
-
+ GET user/connections
  GET  user/feed   >> it will show all the users which are in the platform
 
 
