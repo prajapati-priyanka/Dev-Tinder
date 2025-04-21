@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const connectionRequestSchema = new Schema({
+const connectionRequestSchema = new mongoose.Schema({
 
     fromUserId:{
         type: mongoose.Schema.Types.ObjectId,
@@ -14,13 +14,13 @@ const connectionRequestSchema = new Schema({
         type: String,
         enum:{
             values: ["ignored","interested", "accepted", "rejected"],
-            messaged: `${VALUE} is incorrect status type`
+            messaged: '`{VALUE}` is incorrect status type'
         }
     }
 
 },{timestamps: true});
 
 
-const ConnectionRequestModel = new mongoose("ConnectionRequestModel", connectionRequestSchema);
+const ConnectionRequest = mongoose.model("ConnectionRequest", connectionRequestSchema);
 
-module.exports = ConnectionRequestModel;
+module.exports = ConnectionRequest;
