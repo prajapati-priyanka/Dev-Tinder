@@ -4,7 +4,7 @@ const ConnectionRequest = require("../models/connectionRequest");
 const userRouter = express.Router();
 
 // get all the pending connection requests received by logged in user
-userRouter.get("/user/requests/recieved", userAuth, async(req, res) => {
+userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
     const pendingConnectionRequests = await ConnectionRequest.find({
@@ -23,30 +23,31 @@ userRouter.get("/user/requests/recieved", userAuth, async(req, res) => {
 
 // get all the connections of the loggedIn user.
 
-userRouter.get("/user/connections", userAuth, async(req,res)=>{
-    try {
-        const loggedInUser = req.user;
-        const userConnections = await ConnectionRequest.find({
-            $or: [
-              { fromUserId:loggedInUser, status:"accepted" },
-              { toUserId: loggedInUser, status: "accepted" },
-            ],
-          }).populate("fromUserId", "firstName lastName age gender about");
+userRouter.get("/user/connections", userAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+    const userConnections = await ConnectionRequest.find({
+      $or: [
+        { fromUserId: loggedInUser, status: "accepted" },
+        { toUserId: loggedInUser, status: "accepted" },
+      ],
+    }).populate("fromUserId", "firstName lastName age gender about");
 
+    // Check whether there is connections from loggedIn User. means fromUserId should not be equal to loggedIn user
+    const filteredUserConnections = userConnections.filter(
+      (row) => row.fromUserId._id.toString() !== loggedInUser._id.toString()
+    );
 
-        const filteredUserConnections = userConnections.filter(row => row.fromUserId._id.toString() !== loggedInUser._id.toString());
-
-        console.log(filteredUserConnections)
-
-          if(!userConnections){
-            throw new Error("There is no Connection for this user")
-          }
-          res.json({message:"These are the connection requests", data: filteredUserConnections})
-    } catch (error) {
-        res.send("ERROR: " + error.message);
+    if (!userConnections) {
+      throw new Error("There is no Connection for this user");
     }
-})
-
-
+    res.json({
+      message: "These are the connection requests",
+      data: filteredUserConnections,
+    });
+  } catch (error) {
+    res.send("ERROR: " + error.message);
+  }
+});
 
 module.exports = userRouter;
