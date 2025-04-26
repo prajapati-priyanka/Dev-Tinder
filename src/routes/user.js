@@ -51,10 +51,26 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
   }
 });
 
+
+// page = 1, limit =10 (1-10) USer
+// page = 2, limit =10 (11-20) USer
+// page = 3, limit =10 (21-30) USer
+
+// skip = (1*10) - 10; => 0
+// skip = (2*10) - 10; => 10
+
+// skip = (page*10) - limit;
+
 userRouter.get("/user/feed", userAuth, async (req, res) => {
   // we have to get all the users which are not in connection
   // to: should not be loggedInUser
   // from: should not be loggedInUser
+
+  const page = parseInt(req.query.page) || 1;
+  let limit = parseInt(req.query.limit) || 10;
+  limit > 50 ? 50 : limit;
+  const skip = (page - 1) * limit;
+
 
   const loggedInUser = req.user;
   const connectionRequest = await ConnectionRequest.find({
@@ -75,7 +91,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
         _id: { $ne: loggedInUser._id },
       },
     ],
-  }).select("firstName lastName");
+  }).select("firstName lastName").skip(skip).limit(limit);
 
   res.send(uniqueUser);
 });
