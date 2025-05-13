@@ -78,6 +78,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
   }).select("fromUserId  toUserId");
 
   const hideUserFromFeed = new Set();
+  
 
   connectionRequest.forEach((id) => {
     hideUserFromFeed.add(id.fromUserId.toString());
