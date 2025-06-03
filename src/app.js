@@ -12,10 +12,15 @@ const authRouter = require("./routes/auth.js");
 const profileRouter = require("./routes/profile.js");
 const requestRouter = require("./routes/requests.js");
 const userRouter = require("./routes/user.js");
+const cors = require("cors");
 
 // middleware to parse request body for all the routes.
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+  origin:"http://localhost:5174",
+  credentials:true
+}));
 
 // SIGN UP POST API TO SEND DATA
 

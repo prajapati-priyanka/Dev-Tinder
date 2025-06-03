@@ -8,7 +8,7 @@ const userAuth = async (req, res, next) => {
 
     // validate the token
     if (!token) {
-      throw new Error("Invalid Token !!!");
+      throw new Error("Unauthorized User !!!");
     }
 
     const decodedData = await jwt.verify(token, "WORLD@123");
@@ -22,7 +22,7 @@ const userAuth = async (req, res, next) => {
     req.user = user;
     next()
   } catch (error) {
-    res.status(400).send("ERROR: " + error.message);
+    res.status(401).send("ERROR: " + error.message);
   }
 };
 

@@ -31,11 +31,11 @@ const userSchema = new Schema({
   },
   gender: {
     type: String,
-    validate(value) {
-      if (!["Male", "Female", "Others"].includes(value)) {
-        throw new Error("Gender data is not valid");
-      }
-    },
+    // validate(value) {
+    //   if (!["Male", "Female", "Others"].includes(value)) {
+    //     throw new Error("Gender data is not valid");
+    //   }
+    // },
     lowercase: true
   },
   photoUrl: {
@@ -63,6 +63,7 @@ userSchema.methods.getJwtToken = function(){
 
 userSchema.methods.validatePassword = async function(userInputPassword){
   const user = this;
+
   const isPasswordValid = await bcrypt.compare(userInputPassword, user.password);
 
   return isPasswordValid;
