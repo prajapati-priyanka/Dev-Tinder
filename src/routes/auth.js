@@ -22,10 +22,26 @@ authRouter.post("/signup", async (req, res) => {
       password: passwordHash,
     });
 
-    await newUser.save();
-    res.send("User successfully added");
-  } catch (error) {
-    res.status(500).send("ERROR : " + error.message);
+   const newSignedUpUser =  await newUser.save();
+   
+   
+
+  const isValidPassword = newSignedUpUser.validatePassword(newSignedUpUser.password);
+
+  if (isValidPassword) {
+    // Generate JWT Token
+
+    const jwtToken = await newSignedUpUser.getJwtToken();
+
+    // Wrap the token in the cookie and send as a response to the user
+    res.cookie("token", jwtToken, { expires: new Date(Date.now() + 900000) });
+    res.status(200).json({data: newSignedUpUser, message: "New User Signed Up Successfully"});
+
+   
+  }
+  }
+  catch(error){
+    console.error("Error Occurred: ", error.message);
   }
 });
 
@@ -36,6 +52,7 @@ authRouter.post("/login", async (req, res) => {
       throw new Error("Invalid Credentials");
     }
 
+    // const user = await User.findOne({ email }).select("firstName lastName age about skills photoUrl email");
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -51,7 +68,7 @@ authRouter.post("/login", async (req, res) => {
 
       // Wrap the token in the cookie and send as a response to the user
       res.cookie("token", jwtToken, { expires: new Date(Date.now() + 900000) });
-      res.status(200).send("Login Successfully!");
+      res.status(200).json({data: user, message: "You are Logged In Successfully"});
     } else {
       throw new Error("Invalid Credentials");
     }

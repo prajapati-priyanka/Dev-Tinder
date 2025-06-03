@@ -11,7 +11,7 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
     const pendingConnectionRequests = await ConnectionRequest.find({
       toUserId: loggedInUser._id,
       status: "interested",
-    }).populate("fromUserId", ["firstName", "lastName", "age", "skills"]);
+    }).populate("fromUserId", ["firstName", "lastName", "age", "skills","about","gender", "photoUrl"]);
 
     res.json({
       message: "These are the Connection Requests",
@@ -32,7 +32,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         { fromUserId: loggedInUser, status: "accepted" },
         { toUserId: loggedInUser, status: "accepted" },
       ],
-    }).populate("fromUserId", "firstName lastName age gender about");
+    }).populate("fromUserId", "firstName lastName age gender about photoUrl");
 
     // Check whether there is connections from loggedIn User. means fromUserId should not be equal to loggedIn user
     const filteredUserConnections = userConnections.filter(
@@ -91,7 +91,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
         _id: { $ne: loggedInUser._id },
       },
     ],
-  }).select("firstName lastName").skip(skip).limit(limit);
+  }).select("firstName lastName photoUrl about age gender").skip(skip).limit(limit);
 
   res.send(uniqueUser);
 });

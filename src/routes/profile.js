@@ -10,10 +10,14 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
 
+    if(!user){
+      throw new Error("Unauthorized User");
+    }
+
     // send user profile
     res.status(200).send(user);
   } catch (error) {
-    res.status(400).send("ERROR: " + error.message);
+    res.status(401).send("ERROR: " + error.message);
   }
 });
 
